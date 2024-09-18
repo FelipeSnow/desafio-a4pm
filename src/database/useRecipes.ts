@@ -93,32 +93,31 @@ export function useRecipesDatabase() {
     ingredientes,
   }: Receita) => {
     const query = `
-        INSERT OR REPLACE INTO receitas (
-          id_usuarios,
-          id_categorias,
-          nome,
-          tempo_preparo_minutos,
-          porcoes,
-          modo_preparo,
-          ingredientes,
-          criado_em,
-          alterado_em
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        UPDATE receitas 
+          SET id = $id,
+          -- id_usuarios = $user_id,
+          id_categorias = $cat_id,
+          nome = $name,
+          tempo_preparo_minutos = $time,
+          porcoes = $porc,
+          modo_preparo = $modo,
+          ingredientes = $ingr,
+          criado_em = $created,
+          alterado_em = $updated
+         WHERE id = $id
       `;
 
-    db.runAsync(
-      query,
-      id,
-      id_usuarios,
-      id_categorias || null,
-      nome,
-      tempo_preparo_minutos,
-      porcoes,
-      modo_preparo,
-      ingredientes,
-      new Date(criado_em).toISOString(),
-      new Date().toISOString(),
-    );
+    db.runAsync(query, {
+      $id: id,
+      $cat_id: id_categorias || null,
+      $name: nome,
+      $time: tempo_preparo_minutos,
+      $porc: porcoes,
+      $modo: modo_preparo,
+      $ingr: ingredientes,
+      $created: new Date(criado_em).toISOString(),
+      $updated: new Date().toISOString(),
+    });
   };
 
   const deleteByID = async (id: number) => {

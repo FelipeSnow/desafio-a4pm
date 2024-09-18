@@ -6,12 +6,13 @@ import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 
 interface Props {
+  deletable: boolean;
   data: Receita;
   onPress?: () => void;
   onDelete?: () => void;
 }
 
-const RecipeCard = ({ data, onDelete, onPress }: Props) => {
+const RecipeCard = ({ data, onDelete, onPress, deletable }: Props) => {
   const renderLeftActions = () => (
     <Pressable
       style={{
@@ -21,17 +22,23 @@ const RecipeCard = ({ data, onDelete, onPress }: Props) => {
         alignItems: "center",
       }}
       onPress={() => {
-        Alert.alert("Deletar", "Deseja realmente deletar a receita?", [
-          {
-            text: "Cancelar",
-            style: "cancel",
-          },
-          {
-            text: "Deletar",
-            style: "destructive",
-            onPress: onDelete,
-          },
-        ]);
+        !deletable &&
+          Alert.alert(
+            "Deletar",
+            "Não é possível deletar receitas de outros usuários!",
+          );
+        deletable &&
+          Alert.alert("Deletar", "Deseja realmente deletar a receita?", [
+            {
+              text: "Cancelar",
+              style: "cancel",
+            },
+            {
+              text: "Deletar",
+              style: "destructive",
+              onPress: onDelete,
+            },
+          ]);
       }}
     >
       <Feather name="trash" size={24} color="white" />

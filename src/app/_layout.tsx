@@ -2,9 +2,10 @@ import { Link, Stack } from "expo-router";
 
 import { initializeDatabase } from "@/database/intializeDatabase";
 import { SQLiteProvider } from "expo-sqlite";
-import { AuthProvider } from "@/hooks/useAuth";
+import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { AntDesign } from "@expo/vector-icons";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Touchable, TouchableOpacity } from "react-native";
 
 export default function RootLayout() {
   return (

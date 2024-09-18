@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ViewStyle } from "react-native";
+import { View, Text, ViewStyle, TextStyle } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface ButtonProps {
@@ -13,9 +13,10 @@ const Button = ({
   onPress,
   children,
   style,
+  textStyle,
   marginTop,
   disabled,
-}: React.PropsWithChildren<ButtonProps>) => {
+}: React.PropsWithChildren<ButtonProps> & { textStyle?: TextStyle }) => {
   return (
     <TouchableOpacity
       style={{ marginTop: marginTop || 16 }}
@@ -32,7 +33,7 @@ const Button = ({
           ...style,
         }}
       >
-        <Text style={{ fontSize: 16 }}>{children}</Text>
+        <Text style={{ fontSize: 16, ...textStyle }}>{children}</Text>
       </View>
     </TouchableOpacity>
   );

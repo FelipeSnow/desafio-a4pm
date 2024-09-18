@@ -5,11 +5,11 @@ import {
   TouchableOpacity,
   View,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import { Input } from "@/components/AccountInput";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useUserDatabase } from "@/database/useUser";
-import { Picker } from "@react-native-picker/picker";
 
 export default function Register() {
   const [userName, setUserName] = useState<string>("");
@@ -19,17 +19,30 @@ export default function Register() {
 
   const [passwordInputState, setPasswordInputState] = useState<boolean>(false);
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const { create } = useUserDatabase();
 
-  const handleSubmit = () => {
-    if (password !== passwordConfirmation) {
-      setPasswordInputState(true);
-      return;
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      if (password !== passwordConfirmation) {
+        setPasswordInputState(true);
+        return;
+      }
+      await create({ nome: userName, login: login, senha: password });
+      setLoading(false);
+      router.replace("/");
+    } catch (error) {
+      Alert.alert("Error", JSON.stringify(error));
     }
-    create({ nome: userName, login: login, senha: password });
   };
 
-  return (
+  return loading ? (
+    <View style={{ height: "100%" }}>
+      <ActivityIndicator color={"lightblue"} />
+    </View>
+  ) : (
     <SafeAreaView
       style={{
         backgroundColor: "white",

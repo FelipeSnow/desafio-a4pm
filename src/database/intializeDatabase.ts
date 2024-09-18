@@ -46,7 +46,7 @@ export async function initializeDatabase(database: SQLiteDatabase) {
     INSERT OR IGNORE INTO categorias (id, nome) VALUES (12, 'Light');
     INSERT OR IGNORE INTO categorias (id, nome) VALUES (13, 'Alimentação Saudável');
 
-  --  INSERT OR IGNORE INTO usuarios (id, nome, login, senha, criado_em, alterado_em) VALUES (1, 'Admin', 'admin', 'admin', '2021-09-01 00:00:00', '2021-09-01 00:00:00');
+  INSERT OR IGNORE INTO usuarios (id, nome, login, senha, criado_em, alterado_em) VALUES (1, 'Admin', 'admin', 'admin', '2021-09-01 00:00:00', '2021-09-01 00:00:00');
 
    -- INSERT OR IGNORE INTO receitas (id, id_usuarios, id_categorias, nome, tempo_preparo_minutos, porcoes, modo_preparo, ingredientes, criado_em, alterado_em) VALUES (1, 1, 1, 'Bolo de cenoura', 60, 12, '1. Preaqueça o forno a 180°C. 2. Unte e enfarinhe uma forma de buraco no meio. 3. No liquidificador, bata a cenoura, os ovos e o óleo. 4. Em uma tigela, misture a farinha, o açúcar e o fermento. 5. Junte a mistura do liquidificador com a mistura da tigela e mexa bem. 6. Despeje a massa na forma e leve ao forno por 40 minutos.', '3 cenouras médias, 4 ovos, 1 xícara de óleo, 2 xícaras de açúcar, 2 xícaras de farinha de trigo, 1 colher de sopa de fermento em pó', '2021-09-01 00:00:00', '2021-09-01 00:00:00');
   `);

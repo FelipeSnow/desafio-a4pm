@@ -1,21 +1,23 @@
 import RecipeCard from "@/components/RecipeCard";
 import { Receita, useRecipesDatabase } from "@/database/useRecipes";
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { router, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { View, FlatList, Text, StyleSheet } from "react-native";
 
 export default function List() {
   const [data, setData] = useState<Receita[]>([]);
   const { filterByName, deleteByID } = useRecipesDatabase();
+  const { user } = useAuth();
 
-  const handleFilter = async () => {
+  const handleFilter = useCallback(async () => {
     const result = await filterByName("");
     setData(result);
-  };
+  }, [filterByName]);
 
   useEffect(() => {
     handleFilter();
-  }, []);
+  }, [handleFilter]);
 
   return (
     <View style={styles.container}>
@@ -23,6 +25,7 @@ export default function List() {
         data={data}
         renderItem={({ item }) => (
           <RecipeCard
+            deletable={item.id_usuarios === user?.id}
             data={item}
             onPress={() => router.navigate(`/recipes/${item.id}`)}
             onDelete={async () => {

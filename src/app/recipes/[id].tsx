@@ -1,27 +1,15 @@
 import { View, Text, StyleSheet, Alert, ScrollView } from "react-native";
-import { useEffect, useMemo, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useRecipesDatabase, Receita } from "@/database/useRecipes";
 import { Feather } from "@expo/vector-icons";
-
-const MOCK = {
-  alterado_em: "2021-09-01 00:00:00",
-  criado_em: "2021-09-01 00:00:00",
-  id: 1,
-  id_categorias: 1,
-  id_usuarios: 1,
-  ingredientes:
-    "3 cenouras médias,| 4 ovos,| 1 xícara de óleo,| 2 xícaras de açúcar,| 2 xícaras de farinha de trigo,| 1 colher de sopa de fermento em pó",
-  modo_preparo:
-    "1. Preaqueça o forno a 180°C.| 2. Unte e enfarinhe uma forma de buraco no meio.| 3. No liquidificador, bata a cenoura, os ovos e o óleo.| 4. Em uma tigela, misture a farinha, o açúcar e o fermento.| 5. Junte a mistura do liquidificador com a mistura da tigela e mexa bem.| 6. Despeje a massa na forma e leve ao forno por 40 minutos.|",
-  nome: "Bolo de cenoura",
-  porcoes: 12,
-  tempo_preparo_minutos: 60,
-};
+import { useAuth } from "@/hooks/useAuth";
+import Button from "@/components/Button";
 
 export default function RecipeId() {
   const { id } = useLocalSearchParams();
   const { getById } = useRecipesDatabase();
+  const { user } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [recipe, setRecipe] = useState<Receita | null>();
@@ -35,7 +23,7 @@ export default function RecipeId() {
       .split("|")
       .map((ingredient) => ingredient.trim())
       .filter(Boolean);
-  }, [recipe?.id]);
+  }, [recipe]);
 
   const preparation = useMemo(() => {
     if (!recipe) {
@@ -46,21 +34,24 @@ export default function RecipeId() {
       .split("|")
       .map((step) => step.trim())
       .filter(Boolean);
-  }, [recipe?.id]);
+  }, [recipe]);
 
-  const fetchRecipe = async () => {
+  const fetchRecipe = async (id: number) => {
+    console.log("called?");
     setLoading(true);
-    const recipe = await getById(Number(id));
+    const recipe = await getById(id);
 
     setRecipe(recipe);
     setLoading(false);
   };
 
-  useEffect(() => {
-    if (id) {
-      fetchRecipe();
-    }
-  }, [id]);
+  useFocusEffect(
+    useCallback(() => {
+      if (id) {
+        fetchRecipe(Number(id));
+      }
+    }, [id]),
+  );
 
   if (loading) {
     return (
@@ -104,6 +95,15 @@ export default function RecipeId() {
           <Text key={index}>{step}</Text>
         ))}
       </View>
+      {user?.id === recipe?.id_usuarios && (
+        <Button
+          style={{ backgroundColor: "#fa5518" }}
+          onPress={() => router.navigate(`/recipes/edit/${id}`)}
+          textStyle={{ color: "white", fontWeight: "bold" }}
+        >
+          Editar Receita
+        </Button>
+      )}
     </ScrollView>
   );
 }
