@@ -6,14 +6,28 @@ import {
   View,
   Text,
 } from "react-native";
-import { AccountInput } from "@/components/AccountInput";
+import { Input } from "@/components/AccountInput";
 import { Link } from "expo-router";
+import { useUserDatabase } from "@/database/useUser";
+import { Picker } from "@react-native-picker/picker";
 
 export default function Register() {
   const [userName, setUserName] = useState<string>("");
   const [login, setLogin] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
+
+  const [passwordInputState, setPasswordInputState] = useState<boolean>(false);
+
+  const { create } = useUserDatabase();
+
+  const handleSubmit = () => {
+    if (password !== passwordConfirmation) {
+      setPasswordInputState(true);
+      return;
+    }
+    create({ nome: userName, login: login, senha: password });
+  };
 
   return (
     <SafeAreaView
@@ -31,21 +45,21 @@ export default function Register() {
         <Header />
       </View>
       <View style={{ justifyContent: "space-between" }}>
-        <AccountInput
+        <Input
           onChangeText={(value) => {
             setUserName(value);
           }}
           label="Nome"
           value={userName}
         />
-        <AccountInput
+        <Input
           onChangeText={(value) => {
             setLogin(value);
           }}
           label="Login"
           value={login}
         />
-        <AccountInput
+        <Input
           onChangeText={(value) => {
             setPassword(value);
           }}
@@ -53,18 +67,19 @@ export default function Register() {
           value={password}
           showValue={false}
         />
-        <AccountInput
+        <Input
           onChangeText={(value) => {
             setPasswordConfirmation(value);
           }}
           label="Confirme a Senha"
           value={passwordConfirmation}
           showValue={false}
+          invalid={passwordInputState}
         />
       </View>
       <TouchableOpacity
         style={{ marginTop: 50 }}
-        onPress={() => Alert.alert("Não esquece de implementar o register")}
+        onPress={() => handleSubmit()}
       >
         <View
           style={{
@@ -94,7 +109,7 @@ const Header = () => (
 const LoginNav = () => (
   <View>
     <Text>Já tem uma conta?</Text>
-    <Link href={"/"}>
+    <Link href={"/recipes/12"}>
       <Text style={{ color: "blue" }}>Faça Login!</Text>
     </Link>
   </View>

@@ -1,12 +1,16 @@
-import { AccountInput } from "@/components/AccountInput";
-import { Link } from "expo-router";
+import { Input } from "@/components/AccountInput";
+import { useAuth } from "@/hooks/useAuth";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
 import { Text, View, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Login() {
-  const [login, setLogin] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [login, setLogin] = useState<string>(__DEV__ ? "admin" : "");
+  const [password, setPassword] = useState<string>(__DEV__ ? "admin" : "");
+
+  const { login: handleLogin } = useAuth();
+
   return (
     <SafeAreaView
       style={{
@@ -22,14 +26,14 @@ export default function Login() {
         <Header />
       </View>
       <View>
-        <AccountInput
+        <Input
           onChangeText={(value) => {
             setLogin(value);
           }}
           label="Login"
           value={login}
         />
-        <AccountInput
+        <Input
           onChangeText={(value) => {
             setPassword(value);
           }}
@@ -40,7 +44,7 @@ export default function Login() {
       </View>
       <TouchableOpacity
         style={{ marginTop: 50 }}
-        onPress={() => Alert.alert("Não esquece de implementar o login")}
+        onPress={() => handleLogin(login, password)}
       >
         <View
           style={{
