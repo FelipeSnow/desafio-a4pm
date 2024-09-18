@@ -1,16 +1,11 @@
+import { AccountInput } from "@/components/AccountInput";
+import { Link } from "expo-router";
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  TextInput,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import { Text, View, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Login() {
-  const [username, setUsername] = useState<string>("");
+  const [login, setLogin] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   return (
     <SafeAreaView
@@ -18,7 +13,7 @@ export default function Login() {
         backgroundColor: "white",
         height: "100%",
         width: "100%",
-        paddingHorizontal: 30,
+        padding: 30,
         alignSelf: "center",
         display: "flex",
       }}
@@ -29,10 +24,10 @@ export default function Login() {
       <View>
         <AccountInput
           onChangeText={(value) => {
-            setUsername(value);
+            setLogin(value);
           }}
-          label="Nome de usuário"
-          value={username}
+          label="Login"
+          value={login}
         />
         <AccountInput
           onChangeText={(value) => {
@@ -42,9 +37,9 @@ export default function Login() {
           value={password}
           showValue={false}
         />
-        <RegisterNav />
       </View>
       <TouchableOpacity
+        style={{ marginTop: 50 }}
         onPress={() => Alert.alert("Não esquece de implementar o login")}
       >
         <View
@@ -58,64 +53,25 @@ export default function Login() {
           <Text style={{ fontSize: 18 }}>Entrar</Text>
         </View>
       </TouchableOpacity>
+      <RegisterNav />
     </SafeAreaView>
   );
 }
 
 const Header = () => (
   <View>
-    <Text style={{ fontSize: 24, fontWeight: "bold" }}>Olá,</Text>
-    <Text>Bem vindo de volta!</Text>
+    <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+      Faça Login e Comece a Cozinhar!
+    </Text>
+    <Text>Acesse suas receitas favoritas em um só lugar.</Text>
   </View>
 );
 
 const RegisterNav = () => (
   <View>
     <Text>Não tem uma conta?</Text>
-    <TouchableOpacity>
-      <Text>Criar conta</Text>
-    </TouchableOpacity>
+    <Link href={"/register"}>
+      <Text style={{ color: "blue" }}>Registre-se Hoje!</Text>
+    </Link>
   </View>
 );
-
-interface AccountInputProps {
-  label: string;
-  value: string;
-  showValue?: boolean;
-  onChangeText: (text: string) => void;
-}
-
-const AccountInput = ({
-  label,
-  value,
-  showValue = true,
-  onChangeText,
-}: AccountInputProps) => {
-  return (
-    <View style={styles.Container}>
-      <Text style={{ fontSize: 18 }}>{label}</Text>
-      <TextInput
-        style={styles.TextBox}
-        secureTextEntry={!showValue}
-        value={value}
-        onChangeText={onChangeText}
-      />
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  Container: {
-    flexDirection: "column",
-    //padding: 10,
-  },
-  TextBox: {
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderRadius: 5,
-    fontSize: 16,
-    borderColor: "#d9d9d9",
-    color: "black",
-    padding: 8,
-  },
-});
